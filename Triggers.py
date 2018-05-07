@@ -1,10 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt 
-from obspy.core import read
+from obspy.core import *
 from obspy.signal.trigger import plot_trigger
 from obspy.signal.trigger import classic_sta_lta
- 
-from EarthquakeTimes import *
+import sys
+import os
+
+#from EarthquakeTimes import *
+from datetime import date, datetime, timedelta
 
 #20.07
 #QUESTIONS
@@ -14,6 +17,37 @@ from EarthquakeTimes import *
 NumberOfDays=1 #liczba dni
 NumOfDay=[] #the day of a stream
 st=[]
+
+day = sys.argv[1]
+station = sys.argv[2]
+# Tu można dodać obsługę błędu niepodania dwóch parametrów
+
+ST = UTCDateTime(day, iso8601=True)
+ET = ST + 86400
+
+S = Stream()
+for a in range(-1,2):
+	date = datetime.strftime(ST.datetime+timedelta(days=a),"%Y%j")
+	file = "/media/goto/DATA/13BB/DATA_Pomerania/MSEED_DAILY/"+date+"/"+station+"_"+date+".mseed"
+	if os.path.isfile(file):
+		if os.stat(file).st_size > 0:
+			S = S + read(file)
+S._cleanup();
+#Tego na razie nie robimy - to zrobimy potem
+#S.trim(ST-3600,ET+3600) 
+print(S)
+print()
+Z = S.select(component="Z")
+print(Z)
+df = Z[0].stats.sampling_rate
+print("df=",df)
+Z.filter('lowpass', freq=1.0, corners=2, zerophase=True)
+cft = classic_sta_lta(Z[0].data, int(60 * df), int(180 * df))
+print(cft)
+plot_trigger(Z[0], cft, 1.5, 0.5)
+exit()
+
+
 #create an array of streams
 for i in range(NumberOfDays):
     st_temp=read('/Users/Noon/Documents/Studia/Magisterka/Dane/13BB_201420'+str(i+1)+'/*.mseed')
