@@ -3,13 +3,12 @@ model = TauPyModel(model="iasp91")
 import numpy as np
 from geopy.distance import great_circle
 
-#there will be just 1 file, so no need to do a funsction
+#there will be just 1 file, so no need to do a function
 EarthQ=np.genfromtxt('/Users/Noon/Documents/Studia/Magisterka/Earthquakes/export_EMSC_201_2014.txt', dtype='str', delimiter=';')
 #in this moment can not extract colums 1-5. Usecols does not work
 
-PolCoord=[53.18, 17.91] #wzięłam Bydgoszcz
 
-                            #this block os about real parametrs of the earthquakes
+    #this block is about real parameters of the earthquakes
 
 Days_month=[31,59,90,120,151,181,212,243,273,304,334,365] #do not consider leap year
 EarthQ_year=[]
@@ -66,20 +65,8 @@ def TrTime(dist, depth):
 
                 
 
-                    #znalezienie czasow fal po dotarciu do Polski
-#teorzę jedną listę czasów dotarcia fal do Polski (będzie 1 fail. Funkcja nie jest potrzebna)
-##Pytanie: Ogólnie funkcja jest dłużsa (chodzi o czas wykonania)                    
-PolishTimes=[] #2D array
-for i in range(len(EarthQ)):
-    dist_temp=Distance([EarthQ_lat[i], EarthQ_long[i]],PolCoord)
-    time_temp=TrTime(dist_temp,EarthQ_depth[i])
-    time_temp_pol=time_temp+np.repeat(EarthQ_time[i],len(time_temp))
-    PolishTimes.append(time_temp_pol)
-    
-  
-    
-    
-
+ 
+        
                     
 
 
