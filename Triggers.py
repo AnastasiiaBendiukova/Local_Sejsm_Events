@@ -5,7 +5,9 @@ from obspy.signal.trigger import plot_trigger
 from obspy.signal.trigger import classic_sta_lta
 import sys
 import os 
+import scipy.io as sio
 from datetime import datetime
+
 
 from EarthquakeTimes import * 
 from datetime import date, datetime, timedelta
@@ -72,22 +74,22 @@ print(cft)
 #plot_trigger(Z[0],cft, 1.5, 0.5) #nie rozumiem skad 1.5
 
 
-#Lista triggerow w zapisie 0/1
+#Lista triggerow w zapisie True/False
 trig=[]
 num=[]
 for i in range(len(cft)):
     if cft[i]>1.5:
-        trig.append(1)
+        trig.append(True)
         num.append(i)
     else:
-        trig.append(0)
+        trig.append(False)
 
 
         
 
  
 #znalezienie czasow fal po dotarciu do Polski
-#tworzę jedną listę czasów dotarcia fal do Polski (będzie 1 fail. Funkcja nie jest potrzebna)                  
+                  
 PolishTimes2=[] #2D array
 PolishTimes=[]
 for i in range(len(EarthQ)):
@@ -101,24 +103,28 @@ for i in range(len(PolishTimes2)):
     for k in range(len(PolishTimes2[i])):
         PolishTimes.append(PolishTimes2[i][k])
 
+#zaokrąglenie 
 for i in range(len(PolishTimes)):
     if PolishTimes[i]-int(PolishTimes[i])<0.5:
         PolishTimes[i]=int(PolishTimes[i])
     else:
         PolishTimes[i]=int(PolishTimes[i])+1
 
-
+#Wyrzucenie trzesien ziemi z listy
 for i in range(len(PolishTimes)):
-    if trig[PolishTimes[i]]==1:
-        trig[i]=0
+    if trig[PolishTimes[i]]==True:
+        trig[i]=False
  
-FileName=day+'_'+station_name+'.txt' 
-#start_time = datetime.now()  
 
-f=open(FileName,'w')
-for i in range(len(trig)):
-    f.write(str(trig[i])+'\n')
-f.close()    
+#Zapis danych
+FileName=day+'_'+station_name 
+sio.savemat(FileName, {'trig':trig})
+
+#start_time = datetime.now()  
+#f=open(FileName,'w')
+#for i in range(len(trig)):
+#    f.write(str(trig[i])+'\n')
+#f.close()    
  
 #end_time = datetime.now()
 #print('Duration: {}'.format(end_time - start_time))
