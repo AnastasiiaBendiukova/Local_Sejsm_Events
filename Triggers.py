@@ -9,7 +9,7 @@ import scipy.io as sio
 from datetime import datetime
 
 
-from EarthquakeTimes import * 
+#from EarthquakeTimes import * 
 from datetime import date, datetime, timedelta
 
 
@@ -74,46 +74,53 @@ print(cft)
 #plot_trigger(Z[0],cft, 1.5, 0.5) #nie rozumiem skad 1.5
 
 
-#Lista triggerow w zapisie True/False
-trig=[]
+#Lista triggerow w zapisie True/False, czestosc zapisu - 100 Hz
+trig2=[]
 num=[]
 for i in range(len(cft)):
     if cft[i]>1.5:
-        trig.append(True)
+        trig2.append(True)
         num.append(i)
     else:
+        trig2.append(False)
+
+#zmniejszenie czestosci zapisu
+trig=[]
+for i in range(int(len(trig2)/100)):
+    if trig2[i]==True or trig2[i+1]==True or trig2[i+2]==True:
+        trig.append(True)
+    else:
         trig.append(False)
-
-
+        
         
 
  
 #znalezienie czasow fal po dotarciu do Polski
                   
-PolishTimes2=[] #2D array
-PolishTimes=[]
-for i in range(len(EarthQ)):
-    dist_temp=Distance([EarthQ_lat[i], EarthQ_long[i]], station_coord)
-    time_temp=TrTime(dist_temp,EarthQ_depth[i])
-    time_temp_pol=time_temp+np.repeat(EarthQ_time[i],len(time_temp))
-    PolishTimes2.append(time_temp_pol)
+#PolishTimes2=[] #2D array
+#PolishTimes=[]
+#for i in range(len(EarthQ)):
+#    dist_temp=Distance([EarthQ_lat[i], EarthQ_long[i]], station_coord)
+#    time_temp=TrTime(dist_temp,EarthQ_depth[i])
+#    time_temp_pol=time_temp+np.repeat(EarthQ_time[i],len(time_temp))
+#    PolishTimes2.append(time_temp_pol)
     
 
-for i in range(len(PolishTimes2)):
-    for k in range(len(PolishTimes2[i])):
-        PolishTimes.append(PolishTimes2[i][k])
+#for i in range(len(PolishTimes2)):
+#    for k in range(len(PolishTimes2[i])):
+#        PolishTimes.append(PolishTimes2[i][k])
 
 #zaokrąglenie 
-for i in range(len(PolishTimes)):
-    if PolishTimes[i]-int(PolishTimes[i])<0.5:
-        PolishTimes[i]=int(PolishTimes[i])
-    else:
-        PolishTimes[i]=int(PolishTimes[i])+1
+#for i in range(len(PolishTimes)):
+#    if PolishTimes[i]-int(PolishTimes[i])<0.5:
+#        PolishTimes[i]=int(PolishTimes[i])
+#    else:
+#        PolishTimes[i]=int(PolishTimes[i])+1
 
 #Wyrzucenie trzesien ziemi z listy
-for i in range(len(PolishTimes)):
-    if trig[PolishTimes[i]]==True:
-        trig[i]=False
+#for i in range(len(PolishTimes)):
+#    if trig[PolishTimes[i]]==True:
+#        trig[i]=False
  
 
 #Zapis danych
