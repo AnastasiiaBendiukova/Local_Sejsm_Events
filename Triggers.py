@@ -87,7 +87,7 @@ for i in range(len(cft)):
 #zmniejszenie czestosci zapisu
 trig=[]
 for i in range(int(len(trig2)/100)):
-    if trig2[i]==True or trig2[i+1]==True or trig2[i+2]==True:
+    if trig2[3*i]==True or trig2[(3*i)+1]==True or trig2[(3*i)+2]==True:
         trig.append(True)
     else:
         trig.append(False)
