@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jul 19 14:22:50 2018
+
+@author: Noon
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt 
 from obspy.core import *
@@ -69,62 +76,31 @@ print(Z)
 df = Z[0].stats.sampling_rate
 print("df=",df)
 Z.filter('lowpass', freq=1.0, corners=2, zerophase=True)
-cft={}
-for i in range(len(Z)):
-    cft[i]=classic_sta_lta(Z[i].data, int(60 * df), int(180 * df))
-#    plot_trigger(Z[i],cft[i], 1.5, 0.5)
+cft = classic_sta_lta(Z[0].data, int(60 * df), int(180 * df))
+print(cft)
+plot_trigger(Z[0],cft, 1.5, 0.5) #nie rozumiem skad 1.5
 
 
-#Lista triggerow w zapisie True/False dla każdego z odcinków, czestosc zapisu - 100 Hz
-trig3={}
-#num=[]
-for k in range(len(cft)):
-    trig3[k]=[]
-    for i in range(len(cft[k])):
-        if cft[k][i]>1.5:
-            trig3[k].append(True)
-#           num.append(i)
-        else:
-            trig3[k].append(False)
+#Lista triggerow w zapisie True/False, czestosc zapisu - 100 Hz
+trig2=[]
+num=[]
+for i in range(len(cft)):
+    if cft[i]>1.5:
+        trig2.append(True)
+        num.append(i)
+    else:
+        trig2.append(False)
 
 #zmniejszenie czestosci zapisu
-trig2={}
-for k in range(len(cft)):
-    trig2[k]=[]
-    for i in range(int(len(trig3[k])/100)):
-        if trig3[k][3*i]==True or trig3[k][(3*i)+1]==True or trig3[k][(3*i)+2]==True:
-            trig2[k].append(True)
-        else:
-            trig2[k].append(False)
+trig=[]
+for i in range(int(len(trig2)/100)):
+    if trig2[3*i]==True or trig2[(3*i)+1]==True or trig2[(3*i)+2]==True:
+        trig.append(True)
+    else:
+        trig.append(False)
         
         
-#wyciąganie dłigosci przerw w zapisach 
-gap={}
-for i in range(len(cft)-1): #przerw jest o 1 mniej niz odcinkow  
-    start=str(Z[i].stats.endtime)
-    start_sec=int(start[11:13])*3600+int(start[14:16])*60+round(float(start[17:22]))
-    end=str(Z[i+1].stats.starttime)
-    end_sec=int(start[11:13])*3600+int(end[14:16])*60+round(float(end[17:22]))
-    gap[i]=end_sec-start_sec
-    
-#sklejanie
-if len(cft)!=1:
-    trig=[] 
-    file = open('List_gaps.txt', 'w')
-    file.write(day+ ", "+ station_name)
-    file.close()
-    for k in range(len(cft)-1):
-        for i in range(len(trig2[k])):
-            trig.append(trig2[k][i])
-        for s in range(gap[k]):
-            trig.append(0)
 
-    for i in range(len(trig2[len(cft)-1])):
-        trig.append(trig2[len(cft)-1][i])        
-    
-else:
-    trig=trig2[0]
-    
  
 #znalezienie czasow fal po dotarciu do Polski
                   

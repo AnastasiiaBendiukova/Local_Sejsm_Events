@@ -1,3 +1,5 @@
+
+
 import numpy as np
 import matplotlib.pyplot as plt 
 from obspy.core import *
@@ -50,12 +52,21 @@ ST = UTCDateTime(day, iso8601=True)
 ET = ST + 86400 
 
 S = Stream()
-for a in range(-1,2):
+for a in range(0,1):
 	date = datetime.strftime(ST.datetime+timedelta(days=a),"%Y%j")
-	file = "/Users/noon/Documents/Studia/Magisterka/Dane/13BB_"+day+"/"+station_name+"_"+day+".mseed"
+	file = "/Users/noon/Documents/Studia/Magisterka/Dane/"+station_name+"_"+day+".mseed"
 	if os.path.isfile(file):
 		if os.stat(file).st_size > 0:
 			S = S + read(file)
+            
+            
+
+
+
+    
+              
+            
+    
 S._cleanup(); #ZNALAZLAM TO W METODZIE MERGE, ALE NIE ROZUMIEM PO CO TU TO JEST
 
 
@@ -75,6 +86,7 @@ for i in range(len(Z)):
 #    plot_trigger(Z[i],cft[i], 1.5, 0.5)
 
 
+
 #Lista triggerow w zapisie True/False dla każdego z odcinków, czestosc zapisu - 100 Hz
 trig3={}
 #num=[]
@@ -87,7 +99,10 @@ for k in range(len(cft)):
         else:
             trig3[k].append(False)
 
-#zmniejszenie czestosci zapisu
+
+
+#zmniejszenie czestosci zapisu 
+
 trig2={}
 for k in range(len(cft)):
     trig2[k]=[]
@@ -97,7 +112,6 @@ for k in range(len(cft)):
         else:
             trig2[k].append(False)
         
-        
 #wyciąganie dłigosci przerw w zapisach 
 gap={}
 for i in range(len(cft)-1): #przerw jest o 1 mniej niz odcinkow  
@@ -106,7 +120,7 @@ for i in range(len(cft)-1): #przerw jest o 1 mniej niz odcinkow
     end=str(Z[i+1].stats.starttime)
     end_sec=int(start[11:13])*3600+int(end[14:16])*60+round(float(end[17:22]))
     gap[i]=end_sec-start_sec
-    
+      
 #sklejanie
 if len(cft)!=1:
     trig=[] 
@@ -125,45 +139,13 @@ if len(cft)!=1:
 else:
     trig=trig2[0]
     
- 
-#znalezienie czasow fal po dotarciu do Polski
-                  
-#PolishTimes2=[] #2D array
-#PolishTimes=[]
-#for i in range(len(EarthQ)):
-#    dist_temp=Distance([EarthQ_lat[i], EarthQ_long[i]], station_coord)
-#    time_temp=TrTime(dist_temp,EarthQ_depth[i])
-#    time_temp_pol=time_temp+np.repeat(EarthQ_time[i],len(time_temp))
-#    PolishTimes2.append(time_temp_pol)
+        
     
-
-#for i in range(len(PolishTimes2)):
-#    for k in range(len(PolishTimes2[i])):
-#        PolishTimes.append(PolishTimes2[i][k])
-
-#zaokrąglenie 
-#for i in range(len(PolishTimes)):
-#    if PolishTimes[i]-int(PolishTimes[i])<0.5:
-#        PolishTimes[i]=int(PolishTimes[i])
-#    else:
-#        PolishTimes[i]=int(PolishTimes[i])+1
-
-#Wyrzucenie trzesien ziemi z listy
-#for i in range(len(PolishTimes)):
-#    if trig[PolishTimes[i]]==True:
-#        trig[i]=False
- 
-
-#Zapis danych
-FileName=day+'_'+station_name 
-sio.savemat(FileName, {'trig':trig})
-
-#start_time = datetime.now()  
-#f=open(FileName,'w')
-#for i in range(len(trig)):
-#    f.write(str(trig[i])+'\n')
-#f.close()    
- 
-#end_time = datetime.now()
-#print('Duration: {}'.format(end_time - start_time))
       
+
+
+
+#FileName=day+'_'+station_name 
+#sio.savemat(FileName, {'trig':trig})
+
+#
