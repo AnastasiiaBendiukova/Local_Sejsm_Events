@@ -156,14 +156,27 @@ else:
 
 #Zapis danych
 FileName=day+'_'+station_name 
-sio.savemat(FileName, {'trig':trig})
+sio.savemat("/Users/noon/Documents/Studia/Magisterka/Shifted_times/"+FileName, {'trig':trig})
 
-#start_time = datetime.now()  
-#f=open(FileName,'w')
-#for i in range(len(trig)):
-#    f.write(str(trig[i])+'\n')
-#f.close()    
- 
-#end_time = datetime.now()
-#print('Duration: {}'.format(end_time - start_time))
-      
+
+start_time = datetime.now()
+#Przesunięcie czasów
+depth=[10,250,500,750,1000,1500,2000,3000,5000]
+for i in range(len(depth)):
+    file=open("/Users/noon/Documents/Studia/Magisterka/13BB_traveltimes/"+station_name+"_"+str(depth[i])+".txt",'r')
+    lines=file.readlines()
+#    for k in range(len(lines)):
+    for k in range(3):
+        trig_shifted=trig.copy()
+        shift=round(float(lines[k][6:11]))
+        del trig_shifted[0:shift]
+        fileName=day+'_'+station_name+'_'+lines[k][0:5]+"_"+lines[k][6:11]+"_"+str(depth[i])
+        sio.savemat("/Users/noon/Documents/Studia/Magisterka/Shifted_times/"+fileName,{'trig_shifted':trig_shifted})
+        
+        
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))        
+
+    
+
+
